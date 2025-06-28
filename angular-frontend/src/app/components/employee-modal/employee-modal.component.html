@@ -1,0 +1,135 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade show"></div>
+
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ modalTitle }}</h5>
+        <button type="button" class="btn-close" (click)="onClose()"></button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- View Mode -->
+        <div *ngIf="isViewMode && employee" class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Employee ID:</label>
+              <p class="form-control-plaintext">{{ employee.id }}</p>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Name:</label>
+              <p class="form-control-plaintext">{{ employee.name }}</p>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Email:</label>
+              <p class="form-control-plaintext">{{ employee.email }}</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Position:</label>
+              <p class="form-control-plaintext">{{ employee.position }}</p>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Salary:</label>
+              <p class="form-control-plaintext">{{ employee.salary | currency }}</p>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Department:</label>
+              <p class="form-control-plaintext">{{ employee.department.name }} ({{ employee.department.location }})</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit/Create Mode -->
+        <form *ngIf="!isViewMode" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="name" class="form-label">Name *</label>
+                <input 
+                  type="text" 
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('name')"
+                  id="name" 
+                  formControlName="name"
+                  placeholder="Enter employee name">
+                <div class="invalid-feedback">{{ getFieldError('name') }}</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Email *</label>
+                <input 
+                  type="email" 
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('email')"
+                  id="email" 
+                  formControlName="email"
+                  placeholder="Enter email address">
+                <div class="invalid-feedback">{{ getFieldError('email') }}</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="position" class="form-label">Position *</label>
+                <input 
+                  type="text" 
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('position')"
+                  id="position" 
+                  formControlName="position"
+                  placeholder="Enter job position">
+                <div class="invalid-feedback">{{ getFieldError('position') }}</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="salary" class="form-label">Salary *</label>
+                <input 
+                  type="number" 
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('salary')"
+                  id="salary" 
+                  formControlName="salary"
+                  placeholder="Enter salary amount">
+                <div class="invalid-feedback">{{ getFieldError('salary') }}</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="departmentId" class="form-label">Department *</label>
+                <select 
+                  class="form-select"
+                  [class.is-invalid]="isFieldInvalid('departmentId')"
+                  id="departmentId" 
+                  formControlName="departmentId">
+                  <option value="">Select a department</option>
+                  <option *ngFor="let dept of departments" [value]="dept.id">
+                    {{ dept.name }} - {{ dept.location }}
+                  </option>
+                </select>
+                <div class="invalid-feedback">{{ getFieldError('departmentId') }}</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onClose()">
+          {{ isViewMode ? 'Close' : 'Cancel' }}
+        </button>
+        <button 
+          *ngIf="!isViewMode" 
+          type="button" 
+          class="btn btn-primary"
+          [disabled]="employeeForm.invalid || isSubmitting"
+          (click)="onSubmit()">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status"></span>
+          {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update Employee' : 'Create Employee') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+
+{
+  "name": "employee-management-system",
+  "version": "1.0.0",
+  "description": "Full-stack Employee Management System with Spring Boot and Angular",
+  "scripts": {
+    "dev": "cd spring-backend && mvn spring-boot:run",
+    "start": "npm run dev",
+    "build": "cd angular-frontend && npm install && ng build",
+    "frontend": "cd angular-frontend && npm install && ng serve --host 0.0.0.0 --port 4200 --disable-host-check",
+    "backend": "cd spring-backend && mvn spring-boot:run",
+    "install-frontend": "cd angular-frontend && npm install",
+    "test": "cd spring-backend && mvn test"
+  },
+  "keywords": ["employee-management", "spring-boot", "angular", "java", "typescript"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

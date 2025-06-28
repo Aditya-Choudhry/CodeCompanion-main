@@ -1,0 +1,163 @@
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0">Employee Management System</h2>
+        </div>
+        <div class="card-body">
+          <!-- Search Section -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="input-group">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Enter Department ID (e.g., dept01)"
+                  [(ngModel)]="searchDepartmentId">
+                <button 
+                  class="btn btn-outline-primary" 
+                  type="button" 
+                  (click)="searchByDepartment()">
+                  Search by Department
+                </button>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="btn-group" role="group">
+                <button 
+                  type="button" 
+                  class="btn btn-secondary" 
+                  (click)="showAllEmployees()">
+                  Show All Employees
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-success" 
+                  (click)="addNewEmployee()">
+                  Add New Employee
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-info" 
+                  (click)="generateReport()">
+                  Generate PDF Report
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading Spinner -->
+          <div *ngIf="isLoading" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Employee Table -->
+          <div *ngIf="!isLoading" class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Employee ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Position</th>
+                  <th>Salary</th>
+                  <th>Department</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let employee of filteredEmployees; trackBy: trackByEmployeeId">
+                  <td>{{ employee.id }}</td>
+                  <td>{{ employee.name }}</td>
+                  <td>{{ employee.email }}</td>
+                  <td>{{ employee.position }}</td>
+                  <td>{{ employee.salary | currency }}</td>
+                  <td>{{ employee.department.name }}</td>
+                  <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                      <button 
+                        type="button" 
+                        class="btn btn-outline-primary" 
+                        (click)="viewEmployee(employee)"
+                        title="View Details">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                      <button 
+                        type="button" 
+                        class="btn btn-outline-warning" 
+                        (click)="editEmployee(employee)"
+                        title="Edit">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button 
+                        type="button" 
+                        class="btn btn-outline-danger" 
+                        (click)="deleteEmployee(employee)"
+                        title="Delete">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredEmployees.length === 0">
+                  <td colspan="7" class="text-center py-4">
+                    No employees found
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Statistics -->
+          <div class="row mt-4">
+            <div class="col-md-3">
+              <div class="card bg-info text-white">
+                <div class="card-body">
+                  <h5>Total Employees</h5>
+                  <h3>{{ employees.length }}</h3>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-success text-white">
+                <div class="card-body">
+                  <h5>Total Departments</h5>
+                  <h3>{{ departments.length }}</h3>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-warning text-white">
+                <div class="card-body">
+                  <h5>Filtered Results</h5>
+                  <h3>{{ filteredEmployees.length }}</h3>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-primary text-white">
+                <div class="card-body">
+                  <h5>Average Salary</h5>
+                  <h3>{{ getAverageSalary() | currency }}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Employee Modal -->
+<app-employee-modal 
+  *ngIf="showEmployeeModal"
+  [employee]="selectedEmployee"
+  [departments]="departments"
+  [isEditMode]="isEditMode"
+  (close)="closeModal()"
+  (employeeSaved)="onEmployeeSaved()">
+</app-employee-modal>
